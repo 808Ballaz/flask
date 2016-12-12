@@ -1,17 +1,20 @@
 from flask import Flask, render_template, request
-import weather
+import yelp_api
+from yelp.client import Client
+from yelp.oauth1_authenticator import Oauth1Authenticator
+from os import environ
 import os
 app = Flask(__name__)
 
 @app.route("/")
 def index():
     address = request.values.get('address')
-    forecast = None
+    business = None
     if address:
-        forecast = weather.get_weather(address)
-    return render_template('index.html', forecast=forecast)
+    	business = yelp_api.get_businesses(address,'food')
+    return render_template('index.html', business=business)
 
-@app.route('/about')
+@app.route("/about.html")
 def about():
     return render_template('about.html')
 
